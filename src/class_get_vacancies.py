@@ -2,7 +2,6 @@ import requests
 import json
 
 
-URL = 'https://api.hh.ru/vacancies'
 companies = {
              'Тинькофф': 78638,
              'WILDBERRIES': 87021,
@@ -47,7 +46,7 @@ class GetVacanciesFromApi:
 
     def get_vacancies(self, company_name) -> list:
         """
-        Метод для получениz вакансий по API, возвращает словарь с вакасиями
+        Метод для получениz вакансий по API, возвращает список словарей с вакасиями
         """
         employer_id = self.get_company_id(company_name, companies)
         response = requests.get(self.__url, params={'per_page': 100, 'employer_id': employer_id})
@@ -55,18 +54,28 @@ class GetVacanciesFromApi:
         return vacancies
 
     def get_company_dict(self, company_name) -> dict:
+        """
+        Метод, создающий словарь с данными компании
+        """
         company_dict = {'company_id': self.get_vacancies(company_name)[0]['employer']['id'],
                         'company_name': self.get_vacancies(company_name)[0]['employer']['name'],
                         'url': self.get_vacancies(company_name)[0]['employer']['url']}
         return company_dict
 
-    def det_vacancies_list(self, company_name) -> list:
+    def get_vacancies_list(self, company_name) -> list:
+        """
+        Метод, создающий список словарей с данными вакансий конкретного работодателя
+        (в список добавляютя только те вакансии, для которых указана зарплата)
+        """
         vacancies_list = []
         for vacancy in self.get_vacancies(company_name):
             if not vacancy.get("salary"):
                 pass
             else:
-                salary = vacancy["salary"].get('from')
+                if not vacancy["salary"].get('from'):
+                    salary = vacancy["salary"].get('to')
+                else:
+                    salary = vacancy["salary"].get('from')
                 vacancies_dict = {'vacancy_name': vacancy.get('name'),
                                   'salary': salary,
                                   'area': vacancy.get('area')['name'],
