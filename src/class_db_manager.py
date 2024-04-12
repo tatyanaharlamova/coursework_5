@@ -8,6 +8,9 @@ class DBManager:
         self.db_name = db_name
 
     def execute_(self, query):
+        """
+        Метод соединения с базой данных
+        """
         with psycopg2.connect(dbname=self.db_name, **params) as conn:
             with conn.cursor() as cur:
                 cur.execute(query)
@@ -48,6 +51,7 @@ class DBManager:
         results = self.execute_(
             """
             SELECT AVG(salary) FROM vacancies
+            WHERE salary IS NOT NULL
             """
             )
         return results

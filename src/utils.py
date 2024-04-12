@@ -1,22 +1,12 @@
 import psycopg2
 from config import config
 params = config()
-companies = {
-             'Тинькофф': 78638,
-             'WILDBERRIES': 87021,
-             'Авито': 84585,
-             'Сбер': 3529,
-             'Яндекс': 1740,
-             'Okko': 1375441,
-             'Сбермаркет': 1272486,
-             'Skyeng': 1122462,
-             'VK': 15478,
-             'ГКБ 52': 613491
-             }
 
 
 def create_database(database_name: str, params: dict):
-    """Создание базы данных и таблиц для сохранения данных о компаниях и вакансиях"""
+    """
+    Функция создания базы данных и таблиц для сохранения данных о компаниях и вакансиях
+    """
     conn = psycopg2.connect(dbname='postgres', **params)
     conn.autocommit = True
     with conn.cursor() as cur:
@@ -51,7 +41,9 @@ def create_database(database_name: str, params: dict):
 
 
 def save_data_to_database(vacancies_list: list[dict], companies_list,  database_name: str, params: dict):
-    """Сохранение данных о компаниях в базу данных."""
+    """
+    Функция сохранения данных о компаниях в базу данных
+    """
     with psycopg2.connect(dbname=database_name, **params) as conn:
         with conn.cursor() as cur:
             for company in companies_list:
@@ -69,4 +61,3 @@ def save_data_to_database(vacancies_list: list[dict], companies_list,  database_
                 )
 
     conn.close()
-
