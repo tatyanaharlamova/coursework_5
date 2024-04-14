@@ -42,7 +42,7 @@ class GetVacanciesFromApi:
                 if k == company_name:
                     return companies[k]
         else:
-            print("Компания входит в заданный список")
+            print("Компания не входит в заданный список")
 
     def get_vacancies(self, company_name) -> list:
         """
